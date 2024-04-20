@@ -13,6 +13,11 @@ class CategoryListPage extends GetResponsiveView<CategoryListController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meus Produtos'),
+        actions: [
+          TextButton(
+              onPressed: () => Get.toNamed(Routes.product),
+              child: Text('Novo Produto'))
+        ],
         centerTitle: true,
       ),
       body: Row(

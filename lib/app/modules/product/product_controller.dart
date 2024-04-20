@@ -1,74 +1,55 @@
-import 'package:painel_hortifrutti/app/data/models/cart_product_model.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:painel_hortifrutti/app/data/models/category_model.dart';
 import 'package:painel_hortifrutti/app/data/models/product_model.dart';
 import 'package:painel_hortifrutti/app/data/models/store_model.dart';
 import 'package:painel_hortifrutti/app/data/services/cart/cart_service.dart';
-import 'package:painel_hortifrutti/app/modules/product/widgets/quantity_and_weight/quantity_and_weight_widget_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:painel_hortifrutti/app/modules/product/product_repository.dart';
 
 class ProductController extends GetxController {
+  final ProductRepository _repository;
+
+  ProductController(this._repository);
   final product = Rxn<ProductModel>();
   final store = Rxn<StoreModel>();
   final observationController = TextEditingController();
+  //TextEditingController
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final priceController = TextEditingController();
+
   final _cartService = Get.find<CartService>();
+
+  final image = Rxn<PlatformFile>();
+  final categoryList = RxList<CategoryModel>.empty()();
+  final categoryId = RxnInt();
 
   @override
   void onInit() {
-    product.value = Get.arguments['product'];
-    // store.value = Get.arguments['store'];
-
+    // product.value = Get.arguments['product'];
+    loadCategories();
     super.onInit();
   }
 
-  Future<void> addToCart() async {
-    var quantity = Get.find<QuantityAndWeightController>().quantity;
-
-    if (_cartService.isANewStore(store.value!)) {
-      var startNewCart = await showDialogNewCard();
-
-      if (startNewCart == true) {
-        _cartService.clearCart();
-      } else {
-        return;
-      }
-    }
-
-    if (_cartService.products.isEmpty) {
-      _cartService.newCart(store.value!);
-    }
-    _cartService.addProductToCart(
-      CartProductModel(
-        product: product.value!,
-        quantity: quantity,
-        observation: observationController.text,
-      ),
-    );
-    ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-      SnackBar(
-        content: Text(
-          'O item ${product.value!.name} foi adicionado no carrinho',
-        ),
-      ),
-    );
-
-    Future.delayed(const Duration(milliseconds: 300), () => Get.back());
+  void loadCategories() async {
+    await _repository.getCategories().then((data) {
+      categoryList.assignAll(data);
+    });
   }
 
-  Future<dynamic> showDialogNewCard() async {
-    return await Get.dialog(AlertDialog(
-      content: const Text(
-        'Seu carrinho atual será perdido se adicionar produtos de outro estabelecimento.',
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: const Text('Voltar'),
-        ),
-        TextButton(
-          onPressed: () => Get.back(result: true),
-          child: const Text('Confirmar'),
-        ),
-      ],
-    ));
+  void changeCategory(int? categorySelected) {
+    categoryId.value = categorySelected;
   }
+
+  void pickImage() async {
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.image, withData: true);
+
+    if (result != null && result.files.isNotEmpty) {
+      image.value = result.files.first;
+    }
+  }
+
+  void onAdd() {}
 }
