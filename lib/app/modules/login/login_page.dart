@@ -1,4 +1,3 @@
-import 'package:painel_hortifrutti/app/routes/pages.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import './login_controller.dart';

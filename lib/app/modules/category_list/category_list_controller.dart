@@ -29,4 +29,6 @@ class CategoryListController extends GetxController
     categorySelected.value = category.id;
     Get.find<CategoryController>(tag: 'detail').categoryId.value = category.id;
   }
+
+  loadCategories() {}
 }

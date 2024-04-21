@@ -6,24 +6,25 @@ import 'package:painel_hortifrutti/app/data/services/cart/cart_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:painel_hortifrutti/app/modules/product/product_repository.dart';
+import 'package:painel_hortifrutti/app/modules/product/widgets/new_category/new_category_widget.dart';
 
 class ProductController extends GetxController {
   final ProductRepository _repository;
-
   ProductController(this._repository);
+
   final product = Rxn<ProductModel>();
-  final store = Rxn<StoreModel>();
-  final observationController = TextEditingController();
-  //TextEditingController
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
+  final observationController = TextEditingController();
 
   final _cartService = Get.find<CartService>();
 
   final image = Rxn<PlatformFile>();
   final categoryList = RxList<CategoryModel>.empty()();
   final categoryId = RxnInt();
+
+  final store = Rxn<StoreModel>();
 
   @override
   void onInit() {
@@ -32,7 +33,7 @@ class ProductController extends GetxController {
     super.onInit();
   }
 
-  void loadCategories() async {
+  Future<void> loadCategories() async {
     await _repository.getCategories().then((data) {
       categoryList.assignAll(data);
     });
@@ -52,4 +53,8 @@ class ProductController extends GetxController {
   }
 
   void onAdd() {}
+
+  void goToCategory() {
+    Get.dialog(NewCategoryWidget());
+  }
 }

@@ -8,7 +8,7 @@ class LoginController extends GetxController {
   final _authService = Get.find<AuthService>();
   final formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController(text: 'cliente@email.com');
+  final emailController = TextEditingController(text: 'leo@leo.com');
   final passwordController = TextEditingController(text: '123456');
   final loading = false.obs;
 

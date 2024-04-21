@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:painel_hortifrutti/app/core/errors/exception_handlers.dart';
 import 'package:painel_hortifrutti/app/data/models/address_model.dart';
 import 'package:painel_hortifrutti/app/data/models/category_model.dart';
+import 'package:painel_hortifrutti/app/data/models/category_request_model.dart';
 import 'package:painel_hortifrutti/app/data/models/city_model.dart';
 import 'package:painel_hortifrutti/app/data/models/order_model.dart';
 import 'package:painel_hortifrutti/app/data/models/order_request_model.dart';
@@ -176,6 +177,12 @@ class Api extends GetxService {
     }
 
     return data;
+  }
+
+  Future<CategoryModel> postCategory(CategoryRequestModel data) async {
+    var response =
+        await _dio.post('estabelecimento/categorias', data: jsonEncode(data));
+    return CategoryModel.fromJson(response.data);
   }
 
   Future<OrderModel> getOrder(String id) async {

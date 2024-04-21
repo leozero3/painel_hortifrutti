@@ -136,7 +136,12 @@ class ProductPage extends GetResponsiveView<ProductController> {
                 return null;
               },
             );
-          })
+          }),
+          const SizedBox(height: 16),
+          TextButton(
+            onPressed: controller.goToCategory,
+            child: const Text('Criar uma nova Categoria'),
+          ),
         ],
       ),
     );
